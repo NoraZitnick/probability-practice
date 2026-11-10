@@ -1,0 +1,888 @@
+/* ---------- Design tokens ---------- */
+
+:root {
+  --page: #ffffff;
+  --surface: #f5f5f7;
+  --machine: #ffffff;
+  --ink: #1d1d1f;
+  --ink-hover: #424245;
+  --muted: #6e6e73;
+  --line: #d2d2d7;
+  --slot: #d2d2d7;
+
+  /* Gate A and Gate B keep these colors on every screen. */
+  --a: #e4572e;
+  --a-text: #ad3410;
+  --b: #0066cc;
+  --b-text: #0066cc;
+
+  /* Practice feedback only. */
+  --correct: #1a7f37;
+  --correct-surface: #e8f5ec;
+  --wrong: #c62828;
+  --wrong-surface: #fdecea;
+
+  /* Explosions only. JavaScript raises --damage and --sag as they build up. */
+  --soot: #18120e;
+  --damage: 0;
+  --sag: 0;
+
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --text-small: 0.8125rem;
+  --text-body: 1rem;
+  --text-large: 1.125rem;
+  --text-title: 1.75rem;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 48px;
+
+  --radius-card: 12px;
+  --radius-control: 999px;
+
+  --topbar: 56px;
+  --bottombar: 64px;
+  --screen-padding: var(--space-5);
+  --gutter: clamp(16px, 3vw, 32px);
+  --machine-ratio: calc(420 / 520);
+
+  /* Machines are sized from the window's height, so each screen fits without scrolling. */
+  --stage-height: max(340px, calc(100dvh - var(--topbar) - var(--bottombar) - 2 * var(--screen-padding) - 52px));
+  --lab-height: max(260px, calc(100dvh - var(--topbar) - var(--bottombar) - 2 * var(--screen-padding) - 200px));
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-rows: var(--topbar) minmax(0, 1fr) var(--bottombar);
+  height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  background: var(--page);
+  color: var(--ink);
+  font: 400 var(--text-body)/1.45 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--text-body);
+  white-space: nowrap;
+}
+
+h2 {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-title);
+  letter-spacing: -0.01em;
+}
+
+h2:focus {
+  outline: none;
+}
+
+h3 {
+  font-size: var(--text-body);
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--b);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.text-a {
+  color: var(--a-text);
+}
+
+.text-b {
+  color: var(--b-text);
+}
+
+.math {
+  font-size: var(--text-large);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.math-label {
+  margin-bottom: var(--space-1);
+}
+
+.math-prefix {
+  font-size: var(--text-body);
+  font-weight: 400;
+}
+
+.fine {
+  color: var(--muted);
+  font-size: var(--text-small);
+}
+
+/* Every grouped block on every screen uses this same surface. */
+.result,
+.readout,
+.summary__card {
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+/* ---------- Top and bottom bars ---------- */
+
+.topbar,
+.bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-inline: var(--gutter);
+}
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+}
+
+.bottombar {
+  border-top: 1px solid var(--line);
+}
+
+/* Each group of steps is its own segmented control. */
+.steps {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps__list {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  list-style: none;
+}
+
+.step {
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--text-small);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.step:hover {
+  color: var(--ink);
+}
+
+.step[aria-current="step"] {
+  background: var(--page);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- Buttons ---------- */
+
+.button {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--ink);
+  color: var(--page);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--ink-hover);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.button--secondary {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background: var(--line);
+}
+
+.button + .fine {
+  margin-left: var(--space-2);
+}
+
+/* ---------- Screens ---------- */
+
+.content {
+  min-height: 0;
+}
+
+.screen {
+  height: 100%;
+  padding: var(--screen-padding) var(--gutter);
+  overflow-y: auto;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: auto minmax(0, 480px);
+  gap: clamp(32px, 5vw, 64px);
+  justify-content: center;
+  align-items: start;
+}
+
+.stage {
+  width: calc(var(--stage-height) * var(--machine-ratio));
+  max-width: 100%;
+  margin: 0;
+}
+
+.machine {
+  display: block;
+  width: 100%;
+  aspect-ratio: 420 / 520;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--machine);
+}
+
+.key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--space-3);
+  margin-top: var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-small);
+}
+
+.key > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.marble {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.marble--a {
+  background: var(--a);
+}
+
+.marble--b {
+  background: var(--b);
+}
+
+.marble--both {
+  background: linear-gradient(90deg, var(--a) 50%, var(--b) 50%);
+}
+
+/* Doubles as the hidden explosions checkbox. It's larger than the diamond it draws, so it's easier to click. */
+.key__diamond {
+  display: inline-block;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: -4px;
+  background: center no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M9 3l6 6-6 6-6-6z' fill='none' stroke='%231d1d1f' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+.key__diamond:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M9 3l6 6-6 6-6-6z' fill='%231d1d1f' stroke='%231d1d1f' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+.estimate {
+  display: block;
+  margin: var(--space-4) 0;
+  font-weight: 600;
+}
+
+.estimate__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.estimate__row output {
+  min-width: 3ch;
+  font-size: var(--text-large);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.result {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+}
+
+/* ---------- Compare ---------- */
+
+.lab {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: var(--space-6);
+  justify-content: center;
+  align-items: start;
+}
+
+.lab__controls {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.lab__controls h2 {
+  margin-bottom: 0;
+}
+
+.slider {
+  display: block;
+}
+
+.slider__label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider--a .slider__label {
+  color: var(--a-text);
+}
+
+.slider--a input {
+  accent-color: var(--a);
+}
+
+.slider--b .slider__label {
+  color: var(--b-text);
+}
+
+.slider--b input {
+  accent-color: var(--b);
+}
+
+.slider--overlap input {
+  accent-color: var(--ink);
+}
+
+.lab__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Two pairs of machines; each pair differs in only one way. */
+.lab__machines {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  max-width: calc(4 * var(--lab-height) * var(--machine-ratio) + 2 * var(--space-3) + var(--space-5));
+}
+
+.lab__pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-3);
+  align-content: start;
+}
+
+.lab__pair-head {
+  grid-column: 1 / -1;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.lab__pair-head h3 {
+  font-size: var(--text-body);
+}
+
+.lab__pair-head p {
+  color: var(--muted);
+  font-size: var(--text-small);
+}
+
+.lab-machine {
+  min-width: 0;
+}
+
+.lab-machine h4 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-small);
+}
+
+/* The one part of the rule that differs from the other machine in the pair. */
+.readout mark {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: color-mix(in srgb, #ffcc00 40%, transparent);
+  color: inherit;
+}
+
+/* Stays on its own line, so both machines start at the same height. */
+.lab-machine__kind {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+
+.readout {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-small);
+}
+
+.readout > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--space-2);
+  padding: var(--space-1) 0;
+}
+
+.readout > div + div {
+  border-top: 1px solid var(--line);
+}
+
+.readout dt {
+  color: var(--muted);
+}
+
+.readout dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.fine--note {
+  margin: var(--space-2) 0 0;
+  color: var(--a-text);
+}
+
+/* ---------- Practice ---------- */
+
+.question {
+  font-size: var(--text-large);
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.answer {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.retry-tag {
+  margin-left: var(--space-1);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-control);
+  background: var(--wrong-surface);
+  color: var(--wrong);
+  font-weight: 600;
+}
+
+.retry-note {
+  color: var(--wrong);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.question-prompt {
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+}
+
+.answer--math strong {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.answer:hover:not(:disabled) {
+  background: var(--line);
+}
+
+.answer:disabled {
+  cursor: default;
+}
+
+.answer.is-correct {
+  background: var(--correct-surface);
+  box-shadow: inset 0 0 0 2px var(--correct);
+}
+
+.answer.is-correct strong {
+  color: var(--correct);
+}
+
+.answer.is-correct strong::after {
+  content: " \2713";
+}
+
+.answer.is-wrong {
+  background: var(--wrong-surface);
+  box-shadow: inset 0 0 0 2px var(--wrong);
+}
+
+.answer.is-wrong strong {
+  color: var(--wrong);
+}
+
+.answer.is-wrong strong::after {
+  content: " \2717";
+}
+
+.verdict--correct {
+  color: var(--correct);
+}
+
+.verdict--wrong {
+  color: var(--wrong);
+}
+
+/* ---------- Summary ---------- */
+
+.summary {
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.summary__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.summary__card {
+  padding: var(--space-4);
+}
+
+.summary__card h3 {
+  margin: var(--space-3) 0 var(--space-1);
+}
+
+.summary__card p {
+  color: var(--muted);
+  font-size: var(--text-small);
+}
+
+.summary__card .math {
+  margin-top: var(--space-2);
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.diagram .wall {
+  fill: var(--ink);
+}
+
+.diagram .door-a {
+  fill: var(--a);
+}
+
+.diagram .door-b {
+  fill: var(--b);
+}
+
+.diagram .door-b--over {
+  opacity: 0.75;
+}
+
+.diagram .pins {
+  fill: var(--muted);
+}
+
+.summary__notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+/* ---------- Explosions ---------- */
+
+/* Stops the page shake from adding scrollbars. The background darkens with the
+   weathering, so the gaps the shake opens at the screen's edges don't show up. */
+html {
+  overflow: hidden;
+  background: color-mix(in srgb, var(--soot) calc(var(--damage) * 85%), var(--page));
+}
+
+/* Lasting soot and cracks from explosions. Multiply keeps dark text dark underneath. */
+.weathering {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  opacity: 0.95;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.explosions {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Damage bends the page a little more with every explosion. */
+.stage {
+  transform-origin: left top;
+  transform: rotate(calc(var(--sag) * -3deg)) translateY(calc(var(--sag) * 16px));
+}
+
+.panel {
+  transform-origin: right top;
+  transform: rotate(calc(var(--sag) * 2deg)) translateY(calc(var(--sag) * 10px));
+}
+
+.lab__pair:first-child {
+  transform-origin: left top;
+  transform: rotate(calc(var(--sag) * 3deg));
+}
+
+.lab__pair:last-child {
+  transform-origin: right top;
+  transform: rotate(calc(var(--sag) * -2.5deg));
+}
+
+.lab__controls {
+  transform-origin: left top;
+  transform: rotate(calc(var(--sag) * 2deg));
+}
+
+.is-broken .stage {
+  transform: rotate(-9deg) translate(-12px, 30px);
+}
+
+.is-broken .panel {
+  transform: rotate(5deg) translateY(24px);
+}
+
+.is-broken .topbar {
+  transform-origin: left center;
+  transform: rotate(1.5deg);
+}
+
+.is-broken .bottombar {
+  transform-origin: right center;
+  transform: rotate(-1.5deg);
+}
+
+.is-broken .steps li:nth-child(even) {
+  transform: rotate(14deg) translateY(5px);
+}
+
+.is-broken .screen {
+  overflow: hidden;
+}
+
+/* ---------- Small screens ---------- */
+
+/* Seven steps don’t fit beside the title, so only the current one keeps its name. */
+@media (max-width: 1099px) {
+  .step:not([aria-current="step"]) .step__name {
+    display: none;
+  }
+
+  .step:not([aria-current="step"]) {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    padding: 0;
+  }
+
+  .step:not([aria-current="step"])::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+}
+
+/* Four answers take more room, so short screens tighten the question area. */
+@media (max-height: 700px) {
+  .question {
+    font-size: var(--text-body);
+  }
+
+  .answer {
+    padding-block: var(--space-2);
+  }
+
+  .answers {
+    gap: var(--space-1);
+  }
+
+  .answer--math strong {
+    font-size: var(--text-small);
+  }
+
+  .result {
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .result .math {
+    font-size: var(--text-body);
+  }
+}
+
+
+@media (max-width: 859px) {
+  :root {
+    --stage-height: 44dvh;
+    --lab-height: 40dvh;
+    --screen-padding: var(--space-4);
+  }
+
+  h1 {
+    display: none;
+  }
+
+  .topbar {
+    justify-content: center;
+    padding-inline: var(--space-2);
+  }
+
+  .split,
+  .lab {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .stage {
+    margin-inline: auto;
+  }
+
+  .stage.is-waiting {
+    display: none;
+  }
+
+  .key {
+    justify-content: center;
+  }
+
+  .lab__machines {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+    order: -1;
+  }
+
+  .lab-machine {
+    max-width: calc(var(--lab-height) * var(--machine-ratio));
+    justify-self: center;
+    width: 100%;
+  }
+
+
+  .lab__controls {
+    gap: var(--space-2);
+  }
+
+  .summary__notes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+
+  .summary__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary__card {
+    padding: var(--space-3);
+  }
+}
