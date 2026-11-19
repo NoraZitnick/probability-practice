@@ -383,6 +383,18 @@ input[type="range"] {
   padding: var(--space-4);
 }
 
+/* The same idea without the machine: definition and word-problem clues. */
+.in-words {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  font-size: var(--text-small);
+}
+
+.in-words p {
+  margin-bottom: var(--space-2);
+}
+
 /* ---------- Compare ---------- */
 
 .lab {
@@ -654,6 +666,15 @@ input[type="range"] {
   font-weight: 600;
 }
 
+.summary__card .summary__def,
+.summary__card .summary__clue {
+  color: var(--ink);
+}
+
+.summary__card .summary__example {
+  font-style: italic;
+}
+
 .diagram {
   display: block;
   width: 100%;
@@ -684,7 +705,7 @@ input[type="range"] {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-5);
-  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
 }
 
 /* ---------- Explosions ---------- */

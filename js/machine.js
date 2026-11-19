@@ -663,8 +663,9 @@ const Machine = (() => {
       ctx.textBaseline = 'alphabetic';
       ctx.textAlign = 'center';
 
-      const textA = `${labelA} ${formatPercent(pA)}`;
-      const textB = `${labelB} ${formatPercent(pB)}`;
+      // The colon keeps labels like "Red 1" from running into the percent ("Red 160%").
+      const textA = `${labelA}: ${formatPercent(pA)}`;
+      const textB = `${labelB}: ${formatPercent(pB)}`;
       const halfWidthA = ctx.measureText(textA).width / 2;
       const halfWidthB = ctx.measureText(textB).width / 2;
       const clampX = (x, half) => Math.min(WALL_RIGHT - half - 4, Math.max(WALL_LEFT + half + 4, x));
@@ -746,9 +747,9 @@ const Machine = (() => {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.font = `600 24px ${FONT}`;
-      ctx.fillText('Doors don’t fit', WIDTH / 2, 190);
+      ctx.fillText('Gates don’t fit', WIDTH / 2, 190);
       ctx.font = `400 15px ${FONT}`;
-      ctx.fillText(`${formatPercent(pA + pB)} of a 100% wall`, WIDTH / 2, 222);
+      ctx.fillText(`Together they need ${formatPercent(pA + pB)}, over 100%`, WIDTH / 2, 222);
     }
 
     _drawHiddenGates() {

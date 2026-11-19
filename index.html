@@ -31,9 +31,9 @@
           </figcaption>
         </figure>
 
-        <div class="panel" data-step="stack">
+        <div class="panel" data-step="stack" hidden>
           <h2 tabindex="-1">Independent events</h2>
-          <p>A marble must pass both gates to reach the bottom. The shuffler between them randomizes its position, so passing Gate A has no effect on its chance at Gate B.</p>
+          <p>A marble must pass Gate A and then Gate B to reach the bottom. The shuffler between the gates randomizes its position, so passing Gate A has no effect on its chance at Gate B.</p>
           <label class="estimate" for="estimate-stack">
             <span>How many of 100 marbles do you predict will reach the bottom?</span>
             <span class="estimate__row">
@@ -48,6 +48,10 @@
             <p class="math-label">A marble has to pass both gates, so multiply:</p>
             <p class="math">P(A and B) = <span class="text-a">0.5</span> × <span class="text-b">0.5</span> = 0.25</p>
             <p class="fine">That predicts about 25 of 100.</p>
+            <div class="in-words">
+              <p><strong>Independent events:</strong> one happening doesn’t change the chance of the other.</p>
+              <p><strong>Look for:</strong> “put it back,” “with replacement,” or separate coins, dice and spinners.</p>
+            </div>
           </div>
         </div>
 
@@ -69,12 +73,16 @@
             <p class="math-label">Multiply by P(B | A), the chance of B once A has happened:</p>
             <p class="math">P(A and B) = <span class="text-a">0.5</span> × <span class="text-b">0.8</span> = 0.4</p>
             <p class="fine">That predicts about 40 of 100, not 25.</p>
+            <div class="in-words">
+              <p><strong>Dependent events:</strong> the first one changes the chance of the second.</p>
+              <p><strong>Look for:</strong> “without putting it back,” “without replacement,” or picking two different people or things.</p>
+            </div>
           </div>
         </div>
 
-        <div class="panel" data-step="side" hidden>
+        <div class="panel" data-step="side">
           <h2 tabindex="-1">Mutually exclusive events</h2>
-          <p>Two doors in one wall. A marble can fall through one or the other, but never both.</p>
+          <p>Gate A and Gate B sit side by side. A marble can fall through one gate or the other, but never both.</p>
           <label class="estimate" for="estimate-side">
             <span>How many of 100 marbles do you predict will reach the bottom?</span>
             <span class="estimate__row">
@@ -86,15 +94,19 @@
 
           <div class="result" data-result hidden>
             <p><strong>Reached the bottom: <span data-slot="landed"></span> of 100.</strong> Your prediction: <span data-slot="estimate"></span>. <strong data-slot="verdict"></strong></p>
-            <p class="math-label">A marble can use either door, so add:</p>
+            <p class="math-label">A marble can use either gate, so add:</p>
             <p class="math">P(A or B) = <span class="text-a">0.5</span> + <span class="text-b">0.3</span> = 0.8</p>
             <p class="fine">That predicts about 80 of 100.</p>
+            <div class="in-words">
+              <p><strong>Mutually exclusive events:</strong> they can’t happen at the same time.</p>
+              <p><strong>Look for:</strong> “A or B” about one result that can only be one thing, like one roll, one card or one spin.</p>
+            </div>
           </div>
         </div>
 
         <div class="panel" data-step="overlap" hidden>
           <h2 tabindex="-1">Not mutually exclusive events</h2>
-          <p>The doors now overlap. A marble in the overlap falls through both doors at once.</p>
+          <p>Gate A and Gate B now overlap. A marble in the overlap falls through both gates at once.</p>
           <label class="estimate" for="estimate-overlap">
             <span>How many of 100 marbles do you predict will reach the bottom?</span>
             <span class="estimate__row">
@@ -109,6 +121,10 @@
             <p class="math-label">Adding counts the overlap twice, so subtract it once:</p>
             <p class="math">P(A or B) = <span class="text-a">0.5</span> + <span class="text-b">0.3</span> – 0.1 = 0.7</p>
             <p class="fine">That predicts about 70 of 100.</p>
+            <div class="in-words">
+              <p><strong>Not mutually exclusive events:</strong> they can happen at the same time, so P(A) + P(B) counts the “both” outcomes twice.</p>
+              <p><strong>Look for:</strong> “A or B” where one result can be both, or a given chance of “both.”</p>
+            </div>
           </div>
         </div>
       </div>
@@ -163,12 +179,12 @@
 
           <section class="lab__pair" aria-labelledby="pair-or">
             <header class="lab__pair-head">
-              <h3 id="pair-or">A or B: two doors in one wall</h3>
+              <h3 id="pair-or">A or B: two gates side by side</h3>
               <p>The only difference is the overlap.</p>
             </header>
             <article class="lab-machine" data-machine="side">
-              <h4>Mutually exclusive <span class="lab-machine__kind">Doors apart</span></h4>
-              <canvas class="machine" role="img" aria-label="Mutually exclusive: side-by-side doors. Results are listed below the machine."></canvas>
+              <h4>Mutually exclusive <span class="lab-machine__kind">Gates apart</span></h4>
+              <canvas class="machine" role="img" aria-label="Mutually exclusive: Gate A and Gate B side by side. Results are listed below the machine."></canvas>
               <dl class="readout">
                 <div><dt>Rule</dt><dd>P(A) + P(B)</dd></div>
                 <div><dt>Math</dt><dd data-slot="equation"></dd></div>
@@ -177,8 +193,8 @@
               <p class="fine fine--note" data-slot="note" hidden></p>
             </article>
             <article class="lab-machine" data-machine="overlap">
-              <h4>Not mutually exclusive <span class="lab-machine__kind">Doors overlap</span></h4>
-              <canvas class="machine" role="img" aria-label="Not mutually exclusive: overlapping doors. Results are listed below the machine."></canvas>
+              <h4>Not mutually exclusive <span class="lab-machine__kind">Gates overlap</span></h4>
+              <canvas class="machine" role="img" aria-label="Not mutually exclusive: Gate A and Gate B overlap. Results are listed below the machine."></canvas>
               <dl class="readout">
                 <div><dt>Rule</dt><dd>P(A) + P(B) <mark>– P(A and B)</mark></dd></div>
                 <div><dt>Math</dt><dd data-slot="equation"></dd></div>
@@ -243,6 +259,10 @@
     <section class="screen" id="summary" hidden>
       <div class="summary">
         <h2 tabindex="-1">Summary</h2>
+        <div class="summary__notes">
+          <p><strong>And: multiply.</strong> “Both,” “and” and “in a row” mean two results. If the first changes the odds of the second, use P(B | A).</p>
+          <p><strong>Or: add.</strong> “Or” and “either” mean one result. If it can be both A and B, subtract P(A and B) so it isn’t counted twice.</p>
+        </div>
         <div class="summary__grid">
           <article class="summary__card">
             <svg class="diagram" viewBox="0 0 100 44" aria-hidden="true">
@@ -251,8 +271,11 @@
               <rect class="wall" x="0" y="36" width="25" height="4"/><rect class="door-b" x="25" y="36" width="50" height="4"/><rect class="wall" x="75" y="36" width="25" height="4"/>
             </svg>
             <h3>Independent</h3>
-            <p>Two gates with a shuffler between them. Passing A doesn’t change the chance at B.</p>
+            <p class="summary__def">The first result doesn’t change the odds of the second.</p>
+            <p>The shuffler mixes marbles up between the gates.</p>
             <p class="math">P(A and B) = P(A) × P(B)</p>
+            <p class="summary__clue"><strong>Look for:</strong> “put it back,” separate coins or dice.</p>
+            <p class="summary__example">Heads, then a 6: 1/2 × 1/6 = 1/12</p>
           </article>
           <article class="summary__card">
             <svg class="diagram" viewBox="0 0 100 44" aria-hidden="true">
@@ -260,29 +283,34 @@
               <rect class="wall" x="0" y="36" width="35" height="4"/><rect class="door-b" x="35" y="36" width="50" height="4"/><rect class="wall" x="85" y="36" width="15" height="4"/>
             </svg>
             <h3>Dependent</h3>
-            <p>Two gates with no shuffler. A marble keeps its position, so passing A changes the chance at B.</p>
+            <p class="summary__def">The first result changes the odds of the second.</p>
+            <p>No shuffler, so passing Gate A changes the odds at Gate B.</p>
             <p class="math">P(A and B) = P(A) × P(B | A)</p>
+            <p class="summary__clue"><strong>Look for:</strong> “without putting it back,” picking two.</p>
+            <p class="summary__example">Two aces in a row: 4/52 × 3/51 = 1/221</p>
           </article>
           <article class="summary__card">
             <svg class="diagram" viewBox="0 0 100 44" aria-hidden="true">
               <rect class="wall" x="0" y="20" width="10" height="4"/><rect class="door-a" x="10" y="20" width="50" height="4"/><rect class="door-b" x="60" y="20" width="30" height="4"/><rect class="wall" x="90" y="20" width="10" height="4"/>
             </svg>
             <h3>Mutually exclusive</h3>
-            <p>Two doors side by side in one wall. A marble can’t fall through both.</p>
+            <p class="summary__def">A and B can’t both happen.</p>
+            <p>The gates sit side by side, so no marble passes both.</p>
             <p class="math">P(A or B) = P(A) + P(B)</p>
+            <p class="summary__clue"><strong>Look for:</strong> one result that can only be one thing, like one roll.</p>
+            <p class="summary__example">Saturday or Sunday: 1/7 + 1/7 = 2/7</p>
           </article>
           <article class="summary__card">
             <svg class="diagram" viewBox="0 0 100 44" aria-hidden="true">
               <rect class="wall" x="0" y="20" width="15" height="4"/><rect class="door-a" x="15" y="20" width="50" height="4"/><rect class="door-b door-b--over" x="55" y="20" width="30" height="4"/><rect class="wall" x="85" y="20" width="15" height="4"/>
             </svg>
             <h3>Not mutually exclusive</h3>
-            <p>Two doors that overlap. A marble in the overlap falls through both.</p>
+            <p class="summary__def">A and B can both happen.</p>
+            <p>The gates overlap, so some marbles pass both.</p>
             <p class="math">P(A or B) = P(A) + P(B) – P(A and B)</p>
+            <p class="summary__clue"><strong>Look for:</strong> one result that can be both, like a king that’s a heart.</p>
+            <p class="summary__example">Heart or king: 13/52 + 4/52 – 1/52 = 16/52</p>
           </article>
-        </div>
-        <div class="summary__notes">
-          <p><strong>And: multiply.</strong> Stacked gates ask whether a marble passes A and B. If passing A changes the chance at B, multiply by P(B | A).</p>
-          <p><strong>Or: add.</strong> Doors in one wall ask whether a marble passes A or B. If the doors overlap, subtract the overlap so it isn’t counted twice.</p>
         </div>
       </div>
     </section>

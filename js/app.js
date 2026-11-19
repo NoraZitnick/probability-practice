@@ -60,7 +60,7 @@ function setupExperiment() {
   const section = document.getElementById('experiment');
   const canvas = section.querySelector('canvas');
   const machine = new Machine(canvas, {
-    ...EXPERIMENT_STEPS.stack,
+    ...EXPERIMENT_STEPS.side,
   });
 
   function setupStep(name) {
@@ -132,7 +132,7 @@ function setupExperiment() {
 
   const steps = {};
   Object.keys(EXPERIMENT_STEPS).forEach((name) => { steps[name] = setupStep(name); });
-  let shownStep = 'stack';
+  let shownStep = 'side';
 
   function show(name) {
     const step = steps[name];
@@ -268,10 +268,13 @@ const ANSWER_NAMES = {
   overlap: 'Not Mutually Exclusive',
 };
 
-const PROMPTS = {
-  type: 'What type of event is this?',
-  math: 'What is the correct math?',
-};
+const TYPE_PROMPT = 'What type of event is this?';
+
+/** Splits a scenario's text into its setup and the question sentence at the end. */
+function splitScenarioText(text) {
+  const match = text.match(/^(.*[.!?])\s+([^.!?]*\?)$/s);
+  return match ? { setup: match[1], question: match[2] } : { setup: text, question: '' };
+}
 
 function setupPractice() {
   const section = document.getElementById('practice');
@@ -321,10 +324,13 @@ function setupPractice() {
     machine.setConfig({ pA: 50, pB: 50, ...KINDS.stack });
     hideMachine();
 
+    // Math questions ask the scenario's own question, so it moves from the text to the prompt.
+    const { setup, question: scenarioQuestion } = splitScenarioText(scenario.text);
+    const asksOwnQuestion = ask === 'math' && scenarioQuestion;
     fillSlots(question, {
-      text: scenario.text,
+      text: asksOwnQuestion ? setup : scenario.text,
       progress: `${total - queue.length + 1} of ${total}`,
-      prompt: PROMPTS[ask],
+      prompt: asksOwnQuestion ? scenarioQuestion : TYPE_PROMPT,
     });
     retryTag.hidden = !retry;
     feedback.hidden = true;
@@ -436,13 +442,13 @@ function setupNavigation() {
   const practice = setupPractice();
   const summary = { section: document.getElementById('summary'), show() {}, leave() {} };
 
-  // Steps are grouped in the bar: the two "and" kinds, the two "or" kinds, then review.
-  const groups = ['A and B', 'A or B', 'Review'];
+  // Steps are grouped in the bar: the two "or" kinds, the two "and" kinds, then review.
+  const groups = ['A or B', 'A and B', 'Review'];
   const screens = [
-    { name: 'Independent', group: 0, view: experiment, show: () => experiment.show('stack') },
-    { name: 'Dependent', group: 0, view: experiment, show: () => experiment.show('dependent') },
-    { name: 'Mutually Exclusive', group: 1, view: experiment, show: () => experiment.show('side') },
-    { name: 'Not Mutually Exclusive', group: 1, view: experiment, show: () => experiment.show('overlap') },
+    { name: 'Mutually Exclusive', group: 0, view: experiment, show: () => experiment.show('side') },
+    { name: 'Not Mutually Exclusive', group: 0, view: experiment, show: () => experiment.show('overlap') },
+    { name: 'Independent', group: 1, view: experiment, show: () => experiment.show('stack') },
+    { name: 'Dependent', group: 1, view: experiment, show: () => experiment.show('dependent') },
     { name: 'Compare', group: 2, view: lab, show: () => lab.show() },
     { name: 'Practice', group: 2, view: practice, show: () => practice.show() },
     { name: 'Summary', group: 2, view: summary, show: () => summary.show() },
